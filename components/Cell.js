@@ -13,6 +13,7 @@ export let isOpen = (sel) => sel.status === Status.open
 export let isClosed = (sel) => sel.status === Status.closed
 export let isDone = (sel) => sel.status === Status.done
 export let isFailed = (sel) => sel.status === Status.failed
+export let isBlocking = (sel) => isOpen(sel) || isFailed(sel)
 
 // VIEW ================================================================================================================
 

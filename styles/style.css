@@ -1,0 +1,77 @@
+#root {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.cell {
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 50px;
+    min-width: 50px;
+    font-size: 32px;
+    cursor: default;
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+    transition: all 100ms ease-in-out;
+}
+
+.cell.open {
+    background-color: #f3e5ab;
+    box-shadow: 0px 0px 4px rgba(0,0,0,0.5);
+}
+
+.cell.closed {
+    background-color: #87ceeb;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .cell.closed:hover {
+        cursor: default;
+    }
+}
+
+.cell.done {
+    background-color: #a4cea7;
+    box-shadow: 2px 2px 4px rgba(143, 180, 145, 0.8);
+}
+
+.cell.failed {
+    background-color: #f18681;
+    box-shadow: 2px 2px 4px rgba(212, 118, 114, 0.8);
+}
+
+.board {
+    display: inline-grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    grid-gap: 4px;
+    /*max-width: 200px;*/
+    /*max-height: 200px;*/
+}
+
+.screen {
+    width: 400px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-radius: 10px;
+    cursor: default;
+}
+
+.screen.stopped {
+    background-color: #f3e5ab;
+}
+
+.screen.won {
+    background-color: #a4cea7;
+}
+
+.screen.lost {
+    background-color: #f18681;
+}
