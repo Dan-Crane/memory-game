@@ -18,25 +18,34 @@ let Status = {
 }
 
 let initialBoard = [
-    {status: Cell.Status.closed, symbol: '🐱‍🚀'},
-    {status: Cell.Status.closed, symbol: '🎁'},
-    {status: Cell.Status.closed, symbol: '😜'},
-    {status: Cell.Status.closed, symbol: '🐱‍👤'},
-    {status: Cell.Status.closed, symbol: '🐱‍👤'},
-    {status: Cell.Status.closed, symbol: '😜'},
-    {status: Cell.Status.closed, symbol: '🎁'},
-    {status: Cell.Status.closed, symbol: '🐱‍🚀'},
+    {status: Cell.Status.failed, symbol: '😀'},
+    {status: Cell.Status.closed, symbol: '🍺'},
+    {status: Cell.Status.closed, symbol: '🍿'},
+    {status: Cell.Status.closed, symbol: '😀'},
+    {status: Cell.Status.closed, symbol: '🍖'},
+    {status: Cell.Status.closed, symbol: '🍿'},
+    {status: Cell.Status.closed, symbol: '🍖'},
+    {status: Cell.Status.closed, symbol: '🍺'},
 
-    {status: Cell.Status.closed, symbol: '🐱‍👤'},
-    {status: Cell.Status.closed, symbol: '😜'},
-    {status: Cell.Status.closed, symbol: '🎁'},
-    {status: Cell.Status.closed, symbol: '🐱‍🚀'},
+    // {status: Cell.Status.closed, symbol: '🐱‍🚀'},
+    // {status: Cell.Status.closed, symbol: '🎁'},
+    // {status: Cell.Status.closed, symbol: '😜'},
+    // {status: Cell.Status.closed, symbol: '🐱‍👤'},
+    // {status: Cell.Status.closed, symbol: '🐱‍👤'},
+    // {status: Cell.Status.closed, symbol: '😜'},
+    // {status: Cell.Status.closed, symbol: '🎁'},
+    // {status: Cell.Status.closed, symbol: '🐱‍🚀'},
 
-
-    {status: Cell.Status.closed, symbol: '🐱‍👤'},
-    {status: Cell.Status.closed, symbol: '😜'},
-    {status: Cell.Status.closed, symbol: '🐱‍🚀'},
-    {status: Cell.Status.closed, symbol: '🎁'},
+    // {status: Cell.Status.closed, symbol: '🐱‍👤'},
+    // {status: Cell.Status.closed, symbol: '😜'},
+    // {status: Cell.Status.closed, symbol: '🎁'},
+    // {status: Cell.Status.closed, symbol: '🐱‍🚀'},
+    //
+    //
+    // {status: Cell.Status.closed, symbol: '🐱‍👤'},
+    // {status: Cell.Status.closed, symbol: '😜'},
+    // {status: Cell.Status.closed, symbol: '🐱‍🚀'},
+    // {status: Cell.Status.closed, symbol: '🎁'},
 ]
 
 let startGame = (state) => ({
@@ -45,17 +54,20 @@ let startGame = (state) => ({
     status: Status.running
 })
 
-let openCell = R.curry((i, state) => {
-    return{
+let openCell = R.curry((i, state) => ({
         ...state,
         board: Board.setStatusAt(i, Cell.Status.open, state.board)
-    }
-})
+    }))
 
 let succeedStep = (state) => ({
     ...state,
     board: Board.setStatusesBy(Cell.isOpen, Cell.Status.done, state.board)
 })
+
+let arr = [1, 2, 3, 4]
+let addTwo = x => x + 2
+let result = arr.map(addTwo)
+// console.log(result())
 
 let failStep1 = (state) => ({
     ...state,
@@ -89,6 +101,7 @@ function GameView() {
     }
 
     useEffect(_ => {
+        console.log(state)
         if (Board.areOpensEqual(board)) {
             setState(succeedStep)
         } else if (Board.areOpensDifferent(board)) {

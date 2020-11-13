@@ -16,11 +16,14 @@
     cursor: default;
     box-shadow: 2px 2px 0 rgba(0,0,0,0.5);
     transition: all 100ms ease-in-out;
+    border-radius: 4px;
 }
 
 .cell.open {
     background-color: #f3e5ab;
-    box-shadow: 0px 0px 4px rgba(0,0,0,0.5);
+    /*box-shadow: 2px 2px 4px rgba(0,0,0,0.5);*/
+    box-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+    transform: translate(1px, 1px);
 }
 
 .cell.closed {
@@ -62,6 +65,8 @@
     text-align: center;
     border-radius: 10px;
     cursor: default;
+    /*Тень временная*/
+    box-shadow: 1px 1px 4px 0px #dacd99;
 }
 
 .screen.stopped {
