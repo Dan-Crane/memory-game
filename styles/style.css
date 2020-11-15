@@ -3,6 +3,8 @@
     align-items: center;
     justify-content: center;
     min-height: 100vh;
+    margin-top: -40px;
+    /*background-color: #90AFC5;*/
 }
 
 .cell {
@@ -14,7 +16,7 @@
     min-width: 50px;
     font-size: 32px;
     cursor: default;
-    box-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
     transition: all 100ms ease-in-out;
     border-radius: 4px;
 }
@@ -22,7 +24,7 @@
 .cell.open {
     background-color: #f3e5ab;
     /*box-shadow: 2px 2px 4px rgba(0,0,0,0.5);*/
-    box-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
     transform: translate(1px, 1px);
 }
 
@@ -66,7 +68,7 @@
     border-radius: 10px;
     cursor: default;
     /*Тень временная*/
-    box-shadow: 1px 1px 4px 0px #dacd99;
+    box-shadow: 1px 1px 4px 0 #dacd99;
 }
 
 .screen.stopped {
@@ -79,4 +81,20 @@
 
 .screen.lost {
     background-color: #f18681;
+}
+
+.status-line {
+    /*display: flex;*/
+    /*align-items: center;*/
+    /*justify-content: space-between;*/
+
+    display: grid;
+    grid-template-columns: minmax(min-content, 100%) minmax(min-content, auto) minmax(min-content, auto);
+    justify-items: stretch;
+    align-items: center;
+}
+
+.seconds {
+    font-size: 24px;
+    /*line-height: 28px;*/
 }

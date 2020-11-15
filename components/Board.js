@@ -1,6 +1,6 @@
 import * as R from 'rambda'
 import * as L from '../lib'
-import React, {useState} from 'react'
+import React from 'react'
 import * as Cell from './Cell'
 
 // LOGIC ===============================================================================================================
@@ -9,6 +9,7 @@ export let getStatusAt = R.curry((i, board) => {
 })
 
 export let setStatusAt = R.curry((i, status, board) => {
+    // console.log(R.set(R.lensPath(`${i}.status`), status, board))
     return R.set(R.lensPath(`${i}.status`), status, board)
 })
 
@@ -21,6 +22,9 @@ export let getStatusesBy = R.curry((predFn, board) => {
 })
 
 export let getSymbolsBy = R.curry((predFn, board) => {
+    // console.log(R.chain(cell => predFn(cell) ? [cell] : [], board))
+    let PasSymb = R.filter(predFn, board)
+    // console.log(R.pluck("symbol", PasSymb))
     return R.chain(cell => predFn(cell) ? [cell.symbol] : [], board)
 })
 
