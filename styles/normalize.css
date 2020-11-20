@@ -27,9 +27,7 @@ dd {
 }
 
 body {
-    /*font-family: sans-serif;*/
-    /*font-family: "nineteen_ninety_sevenregular";*/
-    font-family: 'Pangolin', cursive;
+    font-family: 'Pangolin', 'Roboto', 'sans-serif', cursive;
     min-height: 100vh;
     scroll-behavior: smooth;
     text-rendering: optimizeSpeed;
