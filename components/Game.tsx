@@ -1,85 +1,90 @@
 import * as R from 'rambda'
-import React, {useEffect, useState} from 'react'
+import React, {FC, useEffect, useState} from 'react'
 import * as Cell from './Cell'
 import * as Board from './Board'
 
 // LOGIC ===============================================================================================================
-let Status = {
-  stopped: 'stopped',
-  running: 'running',
-  won: 'won',
-  lost: 'lost'
+export enum Status  {
+  stopped ='stopped',
+  running ='running',
+  won ='won',
+  lost ='lost'
 }
 
-let startGame = (state) => ({
-  ...state,
-  board: Board.makeRandom(6, 6),
+export type State = {
+  board : Board.Board
+  status: Status
+  secondLeft : number
+}
+
+let startGame = () => ({
+  board: Board.makeRandom(4, 4),
   status: Status.running,
   secondLeft: 60
 })
 
-let canOpenCell = R.curry((i, state) => {
-  return Board.canOpenAt(i, state.board)
+let canOpenCell = (i : number) => (state : State) : boolean => {
+  return Board.canOpenAt (i) (state.board)
+}
+
+let openCell = (i : number) => (state : State) : State => ({
+  ...state,
+  board: Board.setStatusAt (i) (Cell.Status.open) (state.board)
 })
 
-let openCell = R.curry((i, state) => ({
+let succeedStep = (state : State) : State => ({
   ...state,
-  board: Board.setStatusAt(i, Cell.Status.open, state.board)
-}))
-
-let succeedStep = (state) => ({
-  ...state,
-  board: Board.setStatusesBy(Cell.isOpen, Cell.Status.done, state.board)
+  board: Board.setStatusesBy (Cell.isOpen) (Cell.Status.done) (state.board)
 })
 
-let failStep1 = (state) => ({
+let failStep1 = (state : State) : State => ({
   ...state,
-  board: Board.setStatusesBy(Cell.isOpen, Cell.Status.failed, state.board),
+  board: Board.setStatusesBy (Cell.isOpen) (Cell.Status.failed) (state.board),
 })
 
-let failStep2 = (state) => ({
+let failStep2 = (state : State) : State => ({
   ...state,
-  board: Board.setStatusesBy(Cell.isFailed, Cell.Status.closed, state.board),
+  board: Board.setStatusesBy (Cell.isFailed) (Cell.Status.closed) (state.board),
 })
 
-function hasWinningCond(state) {
+function hasWinningCond(state : State) : boolean {
   return R.filter(Cell.isDone, state.board).length === state.board.length
 }
 
-function hasLosingCond(state) {
+function hasLosingCond(state : State) : boolean{
   return !state.secondLeft
 }
 
-let setStatus = R.curry((status, state) => ({...state, status}))
+let setStatus = (status : Status) => (state : State) : State => ({...state, status})
 
-let nextSecond = (state) => ({
+let nextSecond = (state : State) : State => ({
   ...state,
   secondLeft: Math.max(state.secondLeft - 1, 0)
 })
 
 //VIEW =================================================================================================================
-export function View() {
-  let [state, setState] = useState({
+export let View : FC = () => {
+  let [state, setState] = useState<State>({
     ...startGame(),
     status: Status.stopped,
   })
 
   let {board, status, secondLeft} = state
 
-  function handleStartingClick(i) {
+  let handleStartingClick = () => {
     if (status !== Status.running) {
       setState(startGame)
     }
   }
 
-  function handleRunningClick(i) {
-    if (status === Status.running && canOpenCell(i, state)) {
+  let handleRunningClick = (i : number) => {
+    if (status === Status.running && canOpenCell(i) (state)) {
       setState(openCell(i))
     }
   }
 
   // open || close cell
-  useEffect(_ => {
+  useEffect(() => {
     if (Board.areOpensEqual(board)) {
       setState(succeedStep)
     } else if (Board.areOpensDifferent(board)) {
@@ -91,7 +96,7 @@ export function View() {
   }, [board])
 
   // won || lost status
-  useEffect(_ => {
+  useEffect(() => {
     if (status === Status.running) {
       if (hasWinningCond(state)) {
         return setState(setStatus(Status.won))
@@ -102,24 +107,31 @@ export function View() {
   }, [state])
 
   // timeout
-  useEffect(_ => {
-    let timer = null
-    if (status === Status.running) {
+  useEffect(() => {
+    let timer : ReturnType<typeof setInterval> | undefined = undefined
+    if (status === Status.running && !timer) {
       timer = setInterval(() => {
         setState(nextSecond)
       }, 1000)
     }
 
-    return () => clearInterval(timer)
-  }, [state])
+    return () => {
+      timer ? clearInterval(timer) : null
+    }
+  }, [status])
 
-  return <div onClick={handleStartingClick}>
+  return <div onClick={_ => handleStartingClick()}>
     <StatusLineView status={status} secondLeft={secondLeft}/>
     <ScreenBoxView status={status} board={board} onClickAt={handleRunningClick}/>
   </div>
 }
 
-function ScreenBoxView({status, board, onClickAt}) {
+type ScreenBoxViewProps = {
+  status : Status
+  board : Board.Board
+  onClickAt : (i : number) => void
+}
+let ScreenBoxView:FC<ScreenBoxViewProps> = ({status, board, onClickAt}) => {
   switch (status) {
     case Status.running :
       return <Board.BoardView board={board} onClickAt={onClickAt}/>
@@ -147,7 +159,11 @@ function ScreenBoxView({status, board, onClickAt}) {
   }
 }
 
-function StatusLineView({status, secondLeft}) {
+type StatusLineViewProps = {
+  status : Status,
+  secondLeft : number
+}
+let StatusLineView : FC<StatusLineViewProps>= ({status, secondLeft}) => {
   return <>
     <div className='status-line'>
         <span className='text'>
@@ -194,7 +210,7 @@ function StatusLineView({status, secondLeft}) {
   </>
 }
 
-function backgroundToStatus(status) {
+let backgroundToStatus = (status : Status) : string => {
   switch (status) {
     case Status.won:
       return '#a4cea7'

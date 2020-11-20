@@ -1,27 +1,44 @@
-import * as R from 'rambda'
-import React from 'react'
+// import * as R from 'rambda'
+import * as React from "react"
 
 // LOGIC ===============================================================================================================
-export let Status = {
-  open: 'open',
-  closed: 'closed',
-  done: 'done',
-  failed: 'failed',
+export enum Status {
+  open = 'open',
+  closed = 'closed',
+  done = 'done',
+  failed = 'failed',
 }
 
-// export let isOpen = (sel) => sel.status === Status.open
-export let isOpen = R.compose(R.equals(Status.open), R.prop('status'))
-//export let isClosed = (sel) => sel.status === Status.closed
-export let isClosed = R.compose(R.equals(Status.closed), R.prop('status'))
-//export let isDone = (sel) => sel.status === Status.done
-export let isDone = R.compose(R.equals(Status.done), R.prop('status'))
-// export let isFailed = (sel) => sel.status === Status.failed
-export let isFailed = R.compose(R.equals(Status.failed), R.prop('status'))
-// export let isBlocking = (sel) => isOpen(sel) || isFailed(sel)
-export let isBlocking = R.either(isOpen, isFailed)
+export type Cell = {
+  symbol: string
+  status: Status
+}
+
+export type PredFn = (cell : Cell) => boolean
+
+export let isOpen = (cell : Cell) : boolean =>
+  cell.status === Status.open
+// export let isOpen = R.compose(R.equals(Status.open), R.prop('status' ))
+export let isClosed = (cell : Cell) : boolean =>
+  cell.status === Status.closed
+// export let isClosed = R.compose(R.equals(Status.closed), R.prop('status'))
+export let isDone = (cell : Cell) : boolean =>
+  cell.status === Status.done
+// export let isDone = R.compose(R.equals(Status.done), R.prop('status'))
+export let isFailed = (cell : Cell) : boolean =>
+  cell.status === Status.failed
+// export let isFailed = R.compose(R.equals(Status.failed), R.prop('status'))
+export let isBlocking = (cell : Cell) : boolean =>
+  isOpen(cell) || isFailed(cell)
+// export let isBlocking = R.either(isOpen, isFailed)
 
 // VIEW ================================================================================================================
-export function View({cell, onClick}) {
+type ViewProps = {
+  cell: Cell,
+  onClick: (event : React.MouseEvent) => void
+}
+
+export let View : React.FC<ViewProps> = ({cell, onClick}) =>  {
   let {status, symbol} = cell
   return <div className='cell' onClick={onClick}>
     {status === Status.closed ? '' : symbol}
@@ -53,7 +70,7 @@ export function View({cell, onClick}) {
   </div>
 }
 
-function backgroundToStatus(status) {
+function backgroundToStatus(status : Status) : string {
   switch (status) {
     case Status.closed:
       return '#87ceeb'
@@ -66,7 +83,7 @@ function backgroundToStatus(status) {
   }
 }
 
-function borderShadowToStatus(status) {
+function borderShadowToStatus(status : Status) : string {
   switch (status) {
     case Status.closed:
       return '2px 2px 0 rgba(0, 0, 0, 0.5)'
